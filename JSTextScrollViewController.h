@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
+#define IOS_6 floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1
 
 
 @protocol JSKeyboardToolBarDelegate <NSObject>
@@ -58,6 +59,9 @@
 + (UIToolbar *)createKeyboardToolBarWithDelegate:(id<JSKeyboardToolBarDelegate>)delegate;
 
 + (int)getKeyboardHeight;
+
+- (UIScrollView *)createFullScreenScrollView;
+- (UITableView *)createFullScreenTableView;
 
 - (void)addNotificationObservers;
 - (void)createScrollView;

@@ -131,13 +131,54 @@ static CGRect keyboardFrame;
 - (void)draw {}
 
 - (void)createScrollView {
-	CGRect frame = self.view.bounds;
 	
-	self.scrollView = [[UIScrollView alloc] initWithFrame:frame];
-	[self.scrollView setBackgroundColor:[UIColor groupTableViewBackgroundColor]];
-	[self.scrollView setContentSize:self.scrollView.frame.size];
+	self.scrollView = [self createFullScreenScrollView];
+	[self.scrollView setBackgroundColor:[UIColor colorWithRed:239.0f/255.0f green:239.0f/255.0f blue:244.0f/255.0f alpha:1.0f]];
 	[self.view addSubview:self.scrollView];
 }
+
+
+- (UIScrollView *)createFullScreenScrollView {
+	UIScrollView *scrollView;
+	CGRect frame = self.view.bounds;
+	if (!(IOS_6)) {
+		float top = 0.0f;
+		if (![UIApplication sharedApplication].statusBarHidden) top += 20;
+		if (self.navigationController) top+= self.navigationController.navigationBar.frame.size.height;
+		frame.size.height-=top;
+		frame.origin.y+=top;
+	}
+	else {
+		float top = 0.0f;
+		if (self.navigationController) top+= self.navigationController.navigationBar.frame.size.height;
+		frame.size.height-=top;
+	}
+	scrollView = [[UIScrollView alloc] initWithFrame:frame];
+	[scrollView setContentSize:frame.size];
+	return scrollView;
+}
+
+- (UITableView *)createFullScreenTableView {
+	UITableView *tableView;
+	CGRect frame = self.view.bounds;
+	if (!(IOS_6)) {
+		float top = 0.0f;
+		if (![UIApplication sharedApplication].statusBarHidden) top += 20;
+		if (self.navigationController) top+= self.navigationController.navigationBar.frame.size.height;
+		frame.size.height-=top;
+		frame.origin.y+=top;
+	}
+	else {
+		float top = 0.0f;
+		if (self.navigationController) top+= self.navigationController.navigationBar.frame.size.height;
+		frame.size.height-=top;
+	}
+	tableView = [[UITableView alloc] initWithFrame:frame];
+	return tableView;
+}
+
+
+
 
 
 - (void)didReceiveMemoryWarning
@@ -158,7 +199,8 @@ static CGRect keyboardFrame;
 		off = self.scrollView.contentSize.height - self.scrollView.frame.size.height;
 	if (off<0)
 		off = 0;
-	[UIView animateKeyframesWithDuration:0.3f delay:0.0f options:UIViewKeyframeAnimationOptionBeginFromCurrentState animations:^(){
+//	[UIView animateKeyframesWithDuration:0.3f delay:0.0f options:UIViewKeyframeAnimationOptionBeginFromCurrentState animations:^(){
+	[UIView animateWithDuration:0.25f delay:0.0f options:UIViewAnimationOptionBeginFromCurrentState animations:^() {
 		[self.scrollView setContentOffset:CGPointMake(self.scrollView.contentOffset.x, off)];
 	} completion:^(BOOL finished){
 		[self.scrollView setContentInset:UIEdgeInsetsZero];
@@ -183,7 +225,7 @@ static CGRect keyboardFrame;
 	if (insets.bottom>self.scrollView.contentInset.bottom) {
 		[self.scrollView setContentInset:insets];
 	}
-	[UIView animateKeyframesWithDuration:0.3f delay:0.0f options:UIViewKeyframeAnimationOptionBeginFromCurrentState animations:^(){
+	[UIView animateWithDuration:0.25f delay:0.0f options:UIViewAnimationOptionBeginFromCurrentState animations:^() {
 		[self.scrollView setContentOffset:CGPointMake(self.scrollView.contentOffset.x, off)];
 		[self.scrollView setContentInset:insets];
 		
